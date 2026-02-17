@@ -1,11 +1,12 @@
 {
-  "name": "express-sample",
+  "name": "medidor-de-energia",
   "version": "1.0.0",
   "description": "Hello world app with express 4",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build step required\""
   },
   "keywords": [
     "express",
