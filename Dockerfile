@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy package files first for better cache usage
 COPY package.json package-lock.json* ./
 
-RUN pnpm install 
+RUN npm install 
 
 # Copy app source
 COPY . .
