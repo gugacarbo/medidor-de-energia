@@ -7,11 +7,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 
 # Install dependencies. If pnpm lockfile exists, install pnpm and use it.
-RUN if [ -f pnpm-lock.yaml ]; then \
-      npm install -g pnpm && pnpm install --prod; \
-    else \
-      npm install --production; \
-    fi
+RUN npm install 
 
 # Copy app source
 COPY . .
