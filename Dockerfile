@@ -4,10 +4,9 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 # Copy package files first for better cache usage
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 
-# Install dependencies. If pnpm lockfile exists, install pnpm and use it.
-RUN npm install 
+RUN pnpm install 
 
 # Copy app source
 COPY . .
