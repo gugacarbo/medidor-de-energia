@@ -9,24 +9,31 @@ WORKDIR /app
 RUN apk add --no-cache git && corepack enable
 
 # Clone private repository using GitHub token
-# Usage: docker build --build-arg GITHUB_TOKEN=<token> --build-arg GITHUB_REPO=<repo-url> --build-arg COMMIT_HASH=$(git ls-remote https://<token>@github.com/... main | awk '{print $1}') -f Dockerfile.github.private .
+# Usage no painel: Configure GITHUB_TOKEN como variável de ambiente
 ARG GITHUB_TOKEN
-ARG GITHUB_REPO=https://github.com/seu-usuario/seu-repositorio-privado.git
+ARG GITHUB_REPO=seu-usuario/seu-repositorio-privado
 ARG GITHUB_BRANCH=main
 
-# Passar commit hash para invalidar cache quando houver atualizações
-# Use: docker build --build-arg COMMIT_HASH=$(git ls-remote https://<token>@<repo-url> <branch> | awk '{print $1}')
-ARG COMMIT_HASH=latest
-RUN echo "Building with commit: ${COMMIT_HASH}"
+# Invalidar cache buscando info do último commit (requer token para repos privados)
+# Para repos públicos, remova o ?access_token
+RUN if [ -z "$GITHUB_TOKEN" ]; then \
+      echo "AVISO: GITHUB_TOKEN não definido. Usando cache."; \
+    fi
 
-# Clone with authentication and remove git history
+# Buscar info do último commit para invalidar cache automaticamente
+ADD https://api.github.com/repos/${GITHUB_REPO}/commits/${GITHUB_BRANCH} /tmp/cache_buster.json
+
+# Clonar repositório (primeira vez) ou fazer pull (atualizações)
 RUN if [ -z "$GITHUB_TOKEN" ]; then \
       echo "ERRO: GITHUB_TOKEN é necessário para clonar repositórios privados"; \
       exit 1; \
     fi && \
-    git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/seu-usuario/seu-repositorio-privado.git . && \
-    rm -rf .git && \
-    git config --global --unset-all url.https://.insteadOf
+    if [ ! -d .git ]; then \
+      git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git . ; \
+    else \
+      git fetch origin ${GITHUB_BRANCH} && \
+      git reset --hard origin/${GITHUB_BRANCH} ; \
+    fi
 
 # Install dependencies
 RUN pnpm install
@@ -43,7 +50,5 @@ RUN pnpm prune --prod
 # Default port (can be overridden)
 EXPOSE 3000
 ENV PORT=3000
-
-CMD ["node", "dist/index.js"]
 
 CMD ["node", "dist/index.js"]

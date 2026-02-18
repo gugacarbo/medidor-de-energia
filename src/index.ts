@@ -1,23 +1,25 @@
-import express, { type Express, type Request, type Response } from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+import express, { type Request, type Response } from "express";
+import fs from "fs";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const app: Express = express();
+const app = express();
 
 app.get("/", (req: Request, res: Response) => {
 	res.json({
-		file: __filename,
-		message: __dirname,
+		status: "ok",
+		message: "API de medidor de energia funcionando!",
 	});
 });
 
-app.get("/hello", (req: Request, res: Response) => {
-	res.json({
-		message: "World!222222222222",
-	});
+app.get("/api/energy", (req: Request, res: Response) => {
+	const fileName = `data/energy_data_${Date.now()}.json`;
+
+	const data = {
+		query: req.query,
+		body: req.body,
+		timestamp: new Date().toISOString(),
+	};
+
+	fs.writeFileSync(fileName, JSON.stringify(data, null, 2));
 });
 
 const port = process.env.PORT ?? 3000;
