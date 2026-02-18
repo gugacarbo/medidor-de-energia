@@ -1,0 +1,32 @@
+FROM node:lts-alpine3.22
+
+ENV NODE_ENV=production
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+WORKDIR /app
+
+# Instalar git e habilitar pnpm
+RUN apk add --no-cache git && corepack enable
+
+# Clonar repositório do GitHub
+# Substitua pela URL do seu repositório
+ARG GITHUB_REPO=https://github.com/seu-usuario/seu-repositorio.git
+ARG GITHUB_BRANCH=main
+
+RUN git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . && \
+    rm -rf .git
+
+# Instalar dependências
+RUN pnpm install
+
+# Build TypeScript
+RUN pnpm run build
+
+# Remove dev dependencies
+RUN pnpm prune --prod
+
+# Porta padrão (pode ser sobrescrita por variáveis de ambiente)
+EXPOSE 3000
+ENV PORT=3000
+
+CMD ["node", "dist/index.js"]

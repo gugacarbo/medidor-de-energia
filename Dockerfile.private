@@ -1,0 +1,40 @@
+FROM node:lts-alpine3.22
+
+ENV NODE_ENV=production
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+WORKDIR /app
+
+# Install git and enable pnpm
+RUN apk add --no-cache git && corepack enable
+
+# Clone private repository using GitHub token
+# Usage: docker build --build-arg GITHUB_TOKEN=<token> --build-arg GITHUB_REPO=<repo-url> -f Dockerfile.private .
+# Example: docker build --build-arg GITHUB_TOKEN=ghp_xxxxx --build-arg GITHUB_REPO=https://github.com/seu-usuario/seu-repositorio.git -f Dockerfile.private .
+ARG GITHUB_TOKEN
+ARG GITHUB_REPO=https://github.com/seu-usuario/seu-repositorio-privado.git
+ARG GITHUB_BRANCH=main
+
+# Clone with authentication and remove git history
+RUN if [ -z "$GITHUB_TOKEN" ]; then \
+      echo "ERRO: GITHUB_TOKEN é necessário para clonar repositórios privados"; \
+      exit 1; \
+    fi && \
+    git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/seu-usuario/seu-repositorio-privado.git . && \
+    rm -rf .git && \
+    git config --global --unset-all url.https://.insteadOf
+
+# Install dependencies
+RUN pnpm install
+
+# Build TypeScript
+RUN pnpm run build
+
+# Remove dev dependencies
+RUN pnpm prune --prod
+
+# Default port (can be overridden)
+EXPOSE 3000
+ENV PORT=3000
+
+CMD ["node", "dist/index.js"]
