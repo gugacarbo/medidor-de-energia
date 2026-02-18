@@ -10,14 +10,22 @@ RUN apk add --no-cache git && corepack enable
 
 # Clonar repositório do GitHub
 # Substitua pela URL do seu repositório
-ARG GITHUB_REPO=https://github.com/seu-usuario/seu-repositorio.git
+ARG GITHUB_REPO=https://github.com/gugacarbo/medidor-de-energia.git
 ARG GITHUB_BRANCH=main
 
+# Verificar commit hash remoto para invalidar cache quando há atualizações
+RUN git ls-remote ${GITHUB_REPO} ${GITHUB_BRANCH} | awk '{print $1}' > /tmp/commit_hash.txt && \
+    cat /tmp/commit_hash.txt
+
+# Clonar repositório com o commit hash verificado
 RUN git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . && \
     rm -rf .git
 
 # Instalar dependências
 RUN pnpm install
+
+# Create .env from .env.example if it doesn't exist
+RUN if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi
 
 # Build TypeScript
 RUN pnpm run build

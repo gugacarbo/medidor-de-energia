@@ -15,17 +15,24 @@ ARG GITHUB_TOKEN
 ARG GITHUB_REPO=https://github.com/seu-usuario/seu-repositorio-privado.git
 ARG GITHUB_BRANCH=main
 
-# Clone with authentication and remove git history
+# Verify remote commit hash to invalidate cache when there are updates
 RUN if [ -z "$GITHUB_TOKEN" ]; then \
-      echo "ERRO: GITHUB_TOKEN é necessário para clonar repositórios privados"; \
-      exit 1; \
+    echo "ERRO: GITHUB_TOKEN é necessário para clonar repositórios privados"; \
+    exit 1; \
     fi && \
-    git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/seu-usuario/seu-repositorio-privado.git . && \
+    git ls-remote https://${GITHUB_TOKEN}@github.com/seu-usuario/seu-repositorio-privado.git ${GITHUB_BRANCH} | awk '{print $1}' > /tmp/commit_hash.txt && \
+    cat /tmp/commit_hash.txt
+
+# Clone with authentication and remove git history
+RUN git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/seu-usuario/seu-repositorio-privado.git . && \
     rm -rf .git && \
     git config --global --unset-all url.https://.insteadOf
 
 # Install dependencies
 RUN pnpm install
+
+# Create .env from .env.example if it doesn't exist
+RUN if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi
 
 # Build TypeScript
 RUN pnpm run build

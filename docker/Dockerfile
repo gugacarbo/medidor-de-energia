@@ -16,6 +16,9 @@ RUN pnpm install
 # Copy app source
 COPY . .
 
+# Create .env from .env.example if it doesn't exist
+RUN if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi
+
 # Build TypeScript
 RUN pnpm run build
 

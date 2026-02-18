@@ -8,10 +8,14 @@ const __dirname = path.dirname(__filename);
 const app: Express = express();
 
 app.get("/", (req: Request, res: Response) => {
-	res.sendFile(path.join(__dirname, "../index.html"));
+	res.json({
+		file: __filename,
+		message: __dirname,
+	});
 });
 
 const port = process.env.PORT ?? 3000;
+
 app.listen(port, () => {
 	console.log(`Listening on port ${port}...`);
 });
