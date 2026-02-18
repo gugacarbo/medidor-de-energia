@@ -12,7 +12,7 @@ function createRoutes(app: Express) {
 	app.get("/api", apiIndex);
 	app.get("/api/energy/logs", energyLogsRoute);
 
-	app.post("/api/energy", logEnergyRoute);
+	app.get("/api/energy", logEnergyRoute);
 }
 
 export { createRoutes };

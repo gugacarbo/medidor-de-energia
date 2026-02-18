@@ -9,7 +9,7 @@ import {
 
 async function logEnergyRoute(req: Request, res: Response) {
 	try {
-		const rawData = req.body as unknown as RawEnergyData;
+		const rawData = req.query as RawEnergyData;
 		const adaptedData = adaptEnergyData(rawData);
 
 		await db.insert(energyLogTable).values({
