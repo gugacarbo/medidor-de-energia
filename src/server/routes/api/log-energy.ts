@@ -27,6 +27,7 @@ async function logEnergyRoute(req: Request, res: Response) {
 		res.status(500).json({
 			success: false,
 			error: "Failed to log energy data",
+			stack: error,
 		});
 	}
 }
