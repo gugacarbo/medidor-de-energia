@@ -13,11 +13,12 @@ RUN apk add --no-cache git && corepack enable
 ARG GITHUB_REPO=https://github.com/gugacarbo/medidor-de-energia.git
 ARG GITHUB_BRANCH=main
 
-# Verificar commit hash remoto para invalidar cache quando há atualizações
-RUN git ls-remote ${GITHUB_REPO} ${GITHUB_BRANCH} | awk '{print $1}' > /tmp/commit_hash.txt && \
-    cat /tmp/commit_hash.txt
+# Passar commit hash para invalidar cache quando houver atualizações
+# Use: docker build --build-arg COMMIT_HASH=$(git ls-remote <repo> <branch> | awk '{print $1}')
+ARG COMMIT_HASH=latest
+RUN echo "Building with commit: ${COMMIT_HASH}"
 
-# Clonar repositório com o commit hash verificado
+# Clonar repositório
 RUN git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . && \
     rm -rf .git
 
