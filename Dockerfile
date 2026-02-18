@@ -1,12 +1,17 @@
-FROM node:18-alpine
+FROM node:lts-alpine3.22
 
 ENV NODE_ENV=production
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /app
 
-# Copy package files first for better cache usage
-COPY package.json package-lock.json* ./
+# Enable pnpm using Corepack (built-in with Node.js)
+RUN corepack enable
 
-RUN npm install 
+# Copy package files first for better cache usage
+COPY package.json pnpm-lock.yaml* ./
+
+RUN pnpm install --frozen-lockfile 
 
 # Copy app source
 COPY . .
