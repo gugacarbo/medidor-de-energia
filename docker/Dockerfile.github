@@ -16,11 +16,18 @@ ARG GITHUB_BRANCH=main
 # Passar commit hash para invalidar cache quando houver atualizações
 # Use: docker build --build-arg COMMIT_HASH=$(git ls-remote <repo> <branch> | awk '{print $1}')
 ARG COMMIT_HASH=latest
-RUN echo "Building with commit: ${COMMIT_HASH}"
 
-# Clonar repositório
-RUN git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . && \
-    rm -rf .git
+# Esta camada será invalidada quando COMMIT_HASH mudar
+RUN echo "Building with commit: ${COMMIT_HASH}" > /tmp/commit_hash.txt
+
+# Verificar se já existe repositório clonado
+RUN if [ ! -d .git ]; then \
+        git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . ; \
+    fi
+
+# Fazer pull das alterações mais recentes (preserva arquivos locais não rastreados)
+RUN git fetch origin ${GITHUB_BRANCH} && \
+    git reset --hard origin/${GITHUB_BRANCH}
 
 # Instalar dependências
 RUN pnpm install
