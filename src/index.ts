@@ -10,10 +10,10 @@ app.get("/", (req: Request, res: Response) => {
 	});
 });
 
-//ensure dir exists
-if (!fs.existsSync("data")) {
-	fs.mkdirSync("data");
-}
+// //ensure dir exists
+// if (!fs.existsSync("data")) {
+// 	fs.mkdirSync("data");
+// }
 
 app.get("/api/energy", (req: Request, res: Response) => {
 	const fileName = `data/energy_data_${Date.now()}.json`;
@@ -23,8 +23,8 @@ app.get("/api/energy", (req: Request, res: Response) => {
 		body: req.body,
 		timestamp: new Date().toISOString(),
 	};
-
-	fs.writeFileSync(fileName, JSON.stringify(data, null, 2));
+	res.send(JSON.stringify(data, null, 2));
+	// fs.writeFileSync(fileName, JSON.stringify(data, null, 2));
 });
 
 const port = process.env.PORT ?? 3000;
