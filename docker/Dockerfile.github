@@ -9,25 +9,19 @@ WORKDIR /app
 RUN apk add --no-cache git && corepack enable
 
 # Clonar repositório do GitHub
-# Substitua pela URL do seu repositório
 ARG GITHUB_REPO=https://github.com/gugacarbo/medidor-de-energia.git
 ARG GITHUB_BRANCH=main
 
-# Passar commit hash para invalidar cache quando houver atualizações
-# Use: docker build --build-arg COMMIT_HASH=$(git ls-remote <repo> <branch> | awk '{print $1}')
-ARG COMMIT_HASH=latest2
+# Buscar info do último commit para invalidar cache automaticamente
+ADD https://api.github.com/repos/gugacarbo/medidor-de-energia/commits/main /tmp/cache_buster.json
 
-# Esta camada será invalidada quando COMMIT_HASH mudar
-RUN echo "Building with commit: ${COMMIT_HASH}" > /tmp/commit_hash.txt
-
-# Verificar se já existe repositório clonado
+# Clonar repositório (primeira vez) ou fazer pull (atualizações)
 RUN if [ ! -d .git ]; then \
-        git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . ; \
+    git clone --branch ${GITHUB_BRANCH} ${GITHUB_REPO} . ; \
+    else \
+    git fetch origin ${GITHUB_BRANCH} && \
+    git reset --hard origin/${GITHUB_BRANCH} ; \
     fi
-
-# Fazer pull das alterações mais recentes (preserva arquivos locais não rastreados)
-RUN git fetch origin ${GITHUB_BRANCH} && \
-    git reset --hard origin/${GITHUB_BRANCH}
 
 # Instalar dependências
 RUN pnpm install
