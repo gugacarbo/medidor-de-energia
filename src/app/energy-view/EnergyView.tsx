@@ -19,9 +19,6 @@ const EnergyView: FunctionComponent<EnergyViewProps> = ({ logs }) => {
 			<body>
 				<div class="container">
 					<h1>⚡ Medidor de Energia</h1>
-					<button class="refresh-btn" onClick={() => location.reload()}>
-						🔄 Atualizar
-					</button>
 					{logs.length === 0 ? (
 						<div class="no-data">Nenhum dado registrado ainda</div>
 					) : (

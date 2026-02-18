@@ -1,14 +1,20 @@
+import axios from "axios";
 import { EnergyView } from "./energy-view/EnergyView";
+import { env } from "@/lib/env";
+import { EnergyLog } from "@/db/schema";
 
 async function App() {
-	const logs = await fetch(
-		"http://localhost:3000/api/energy/logs?limit=5",
-	).then(res => res.json());
+	const response = (
+		await axios.get<{
+			success: boolean;
+			data: EnergyLog[];
+		}>(env.APP_URL + "/api/energy/logs?limit=5")
+	).data;
 
 	return (
 		<div>
-			{logs.success ? (
-				<EnergyView logs={logs.data} />
+			{response.success ? (
+				<EnergyView logs={response.data} />
 			) : (
 				<p>Erro ao carregar os dados de energia.</p>
 			)}
