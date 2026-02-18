@@ -2,7 +2,10 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "es2022",
-    "lib": ["ES2022", "DOM"],
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -10,6 +13,21 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@db/*": [
+        "src/db/*"
+      ],
+      "@server/*": [
+        "src/server/*"
+      ],
+      "@adapters/*": [
+        "src/adapters/*"
+      ]
+    },
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -18,6 +36,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

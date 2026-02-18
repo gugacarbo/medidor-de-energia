@@ -1,9 +1,10 @@
 import { type Request, type Response } from "express";
-import { db } from "../../db/db";
-import { energyLogTable } from "../../db/schema";
+import { energyLogTable } from "@db/schema";
+import { db } from "@db/db";
 
-async function homeRoute(req: Request, res: Response) {
+async function apiIndex(_: Request, res: Response) {
 	const count = await db.$count(energyLogTable);
+
 	res.json({
 		status: "ok",
 		message: "API de medidor de energia funcionando!",
@@ -11,4 +12,4 @@ async function homeRoute(req: Request, res: Response) {
 	});
 }
 
-export { homeRoute };
+export { apiIndex };

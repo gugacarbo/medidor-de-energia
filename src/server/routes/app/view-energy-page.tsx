@@ -1,11 +1,11 @@
 import { type Request, type Response } from "express";
-import { db } from "../../db/db";
-import { energyLogTable } from "../../db/schema";
+import { db } from "@db/db";
+import { energyLogTable } from "@db/schema";
 import { desc } from "drizzle-orm";
 import render from "preact-render-to-string";
-import { EnergyView } from "../components/EnergyView";
+import { EnergyView } from "../../../app/energy-view/EnergyView";
 
-async function viewEnergyRoute(req: Request, res: Response) {
+async function viewEnergyPageRoute(req: Request, res: Response) {
 	try {
 		const limit = parseInt(req.query.limit as string) || 10;
 
@@ -25,4 +25,4 @@ async function viewEnergyRoute(req: Request, res: Response) {
 	}
 }
 
-export { viewEnergyRoute };
+export { viewEnergyPageRoute };

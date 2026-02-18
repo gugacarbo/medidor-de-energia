@@ -1,14 +1,15 @@
 import { type Request, type Response } from "express";
-import { db } from "../../db/db";
-import { energyLogTable } from "../../db/schema";
+import { db } from "@/db/db";
+import { energyLogTable } from "@db/schema";
+
 import {
 	adaptEnergyData,
 	type RawEnergyData,
-} from "../../adapters/energy-data.adapter";
+} from "@adapters/energy-data.adapter";
 
 async function logEnergyRoute(req: Request, res: Response) {
 	try {
-		const rawData = req.query as unknown as RawEnergyData;
+		const rawData = req.body as unknown as RawEnergyData;
 		const adaptedData = adaptEnergyData(rawData);
 
 		await db.insert(energyLogTable).values({

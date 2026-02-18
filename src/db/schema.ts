@@ -38,3 +38,6 @@ export const energyLogTable = pgTable("energy_log", {
 	// Timestamp
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export type EnergyLog = typeof energyLogTable.$inferSelect;
+export type NewEnergyLog = typeof energyLogTable.$inferInsert;

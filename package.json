@@ -19,7 +19,8 @@
     "express": "^4.15.0",
     "pg": "^8.18.0",
     "preact": "^10.28.3",
-    "preact-render-to-string": "^6.6.5"
+    "preact-render-to-string": "^6.6.5",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
