@@ -10,6 +10,11 @@ app.get("/", (req: Request, res: Response) => {
 	});
 });
 
+//ensure dir exists
+if (!fs.existsSync("data")) {
+	fs.mkdirSync("data");
+}
+
 app.get("/api/energy", (req: Request, res: Response) => {
 	const fileName = `data/energy_data_${Date.now()}.json`;
 
