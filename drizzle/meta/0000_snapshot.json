@@ -1,5 +1,5 @@
 {
-  "id": "51404faf-dace-4667-a9f8-5c2048894b32",
+  "id": "406f8e35-1e91-4320-be84-0582c0fb997c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -30,6 +30,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
