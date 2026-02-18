@@ -1,11 +1,10 @@
 import { App } from "@/app/app";
 import { type Request, type Response } from "express";
-
 import render from "preact-render-to-string";
 
 async function appRoute(req: Request, res: Response) {
 	try {
-		const html = "<!DOCTYPE html>" + render(App());
+		const html = "<!DOCTYPE html>" + render(await App());
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
 		res.send(html);
 	} catch (error) {

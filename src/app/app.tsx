@@ -1,8 +1,17 @@
-function App() {
+import { EnergyView } from "./energy-view/EnergyView";
+
+async function App() {
+	const logs = await fetch(
+		"http://localhost:3000/api/energy/logs?limit=5",
+	).then(res => res.json());
+
 	return (
 		<div>
-			<h1>Medidor de Energia</h1>
-			<a href="/view">Ver Dados de Energia</a>
+			{logs.success ? (
+				<EnergyView logs={logs.data} />
+			) : (
+				<p>Erro ao carregar os dados de energia.</p>
+			)}
 		</div>
 	);
 }
