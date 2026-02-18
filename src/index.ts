@@ -1,47 +1,7 @@
-import express, { type Request, type Response } from "express";
-import fs from "fs";
+import { createServer } from "./app/server";
 
-const app = express();
+async function main() {
+	await createServer();
+}
 
-app.get("/", (req: Request, res: Response) => {
-	res.json({
-		status: "ok",
-		message: "API de medidor de energia funcionando!",
-	});
-});
-
-// //ensure dir exists
-// if (!fs.existsSync("data")) {
-// 	fs.mkdirSync("data");
-// }
-
-app.get("/api/fs", (req: Request, res: Response) => {
-	const fileName = `data/fs_data_${Date.now()}.json`;
-
-	const data = {
-		query: req.query,
-		body: req.body,
-		timestamp: new Date().toISOString(),
-	};
-	res.send(JSON.stringify(data, null, 2));
-
-	fs.writeFileSync(fileName, JSON.stringify(data, null, 2));
-});
-
-app.get("/api/energy", (req: Request, res: Response) => {
-	const fileName = `data/energy_data_${Date.now()}.json`;
-
-	const data = {
-		query: req.query,
-		body: req.body,
-		timestamp: new Date().toISOString(),
-	};
-	res.send(JSON.stringify(data, null, 2));
-	// fs.writeFileSync(fileName, JSON.stringify(data, null, 2));
-});
-
-const port = process.env.PORT ?? 3000;
-
-app.listen(port, () => {
-	console.log(`Listening on port ${port}...`);
-});
+main();
