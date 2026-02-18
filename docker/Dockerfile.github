@@ -15,7 +15,7 @@ ARG GITHUB_BRANCH=main
 
 # Passar commit hash para invalidar cache quando houver atualizações
 # Use: docker build --build-arg COMMIT_HASH=$(git ls-remote <repo> <branch> | awk '{print $1}')
-ARG COMMIT_HASH=latest
+ARG COMMIT_HASH=latest2
 
 # Esta camada será invalidada quando COMMIT_HASH mudar
 RUN echo "Building with commit: ${COMMIT_HASH}" > /tmp/commit_hash.txt
