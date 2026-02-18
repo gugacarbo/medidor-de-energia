@@ -1,15 +1,17 @@
 FROM node:lts-alpine3.22
 
 ENV NODE_ENV=production
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
+# Enable pnpm using Corepack (built-in with Node.js)
+RUN corepack enable
 
 # Copy package files first for better cache usage
 COPY package.json pnpm-lock.yaml* ./
 
-RUN pnpm install --frozen-lockfile 
+RUN pnpm install --prod 
 
 # Copy app source
 COPY . .
