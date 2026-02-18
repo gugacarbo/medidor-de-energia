@@ -1,5 +1,5 @@
 {
-  "id": "406f8e35-1e91-4320-be84-0582c0fb997c",
+  "id": "965f5231-c1c9-41bc-b8b6-6b48024d5ae7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -25,14 +25,86 @@
             "cycle": false
           }
         },
-        "data": {
-          "name": "data",
-          "type": "jsonb",
+        "meter_id": {
+          "name": "meter_id",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "active_power": {
+          "name": "active_power",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reactive_power": {
+          "name": "reactive_power",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "apparent_power": {
+          "name": "apparent_power",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voltage": {
+          "name": "voltage",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "current": {
+          "name": "current",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "power_factor": {
+          "name": "power_factor",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phase_angle": {
+          "name": "phase_angle",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "frequency": {
+          "name": "frequency",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consumed_energy": {
+          "name": "consumed_energy",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generated_energy": {
+          "name": "generated_energy",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "operation_time": {
+          "name": "operation_time",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "raw_data": {
+          "name": "raw_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,

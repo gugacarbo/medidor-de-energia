@@ -5,8 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1771444884035,
-      "tag": "0000_create energyLog table",
+      "when": 1771445661425,
+      "tag": "0000_create-energy_log-table",
       "breakpoints": true
     }
   ]

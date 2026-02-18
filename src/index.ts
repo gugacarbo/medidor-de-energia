@@ -1,7 +1,15 @@
-import { createServer } from "./app/server";
+import { createServer } from "./server/server";
 
 async function main() {
-	await createServer();
+	try {
+		await createServer();
+	} catch (error) {
+		console.error("Error starting server:", error);
+	}
 }
 
-main();
+try {
+	main();
+} catch (error) {
+	console.error("Error in main execution:", error);
+}

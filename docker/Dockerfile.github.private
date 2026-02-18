@@ -17,29 +17,26 @@ ARG GITHUB_BRANCH=main
 # Invalidar cache buscando info do último commit (requer token para repos privados)
 # Para repos públicos, remova o ?access_token
 RUN if [ -z "$GITHUB_TOKEN" ]; then \
-      echo "AVISO: GITHUB_TOKEN não definido. Usando cache."; \
-    fi
+  echo "AVISO: GITHUB_TOKEN não definido. Usando cache."; \
+  fi
 
 # Buscar info do último commit para invalidar cache automaticamente
 ADD https://api.github.com/repos/${GITHUB_REPO}/commits/${GITHUB_BRANCH} /tmp/cache_buster.json
 
 # Clonar repositório (primeira vez) ou fazer pull (atualizações)
 RUN if [ -z "$GITHUB_TOKEN" ]; then \
-      echo "ERRO: GITHUB_TOKEN é necessário para clonar repositórios privados"; \
-      exit 1; \
-    fi && \
-    if [ ! -d .git ]; then \
-      git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git . ; \
-    else \
-      git fetch origin ${GITHUB_BRANCH} && \
-      git reset --hard origin/${GITHUB_BRANCH} ; \
-    fi
+  echo "ERRO: GITHUB_TOKEN é necessário para clonar repositórios privados"; \
+  exit 1; \
+  fi && \
+  if [ ! -d .git ]; then \
+  git clone --branch ${GITHUB_BRANCH} https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git . ; \
+  else \
+  git fetch origin ${GITHUB_BRANCH} && \
+  git reset --hard origin/${GITHUB_BRANCH} ; \
+  fi
 
 # Install dependencies
 RUN pnpm install
-
-# Create .env from .env.example if it doesn't exist
-RUN if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi
 
 # Build TypeScript
 RUN pnpm run build
